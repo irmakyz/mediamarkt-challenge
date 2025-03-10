@@ -1,0 +1,32 @@
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyles = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  button {
+    font-family: inherit;
+  }
+  #__next {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Expands to fill available space */
+  }
+  main {
+    flex: 1;
+  }
+`;
+
+export default GlobalStyles;
