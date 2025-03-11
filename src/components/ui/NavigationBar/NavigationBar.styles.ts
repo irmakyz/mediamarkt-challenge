@@ -6,7 +6,7 @@ export const NavBarContainer = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "start",
-  gap: theme.spacing.m,
+  gap: theme.spacing.l,
   borderBottom: `0.5px solid ${theme.colors.lightGrey}`,
 }));
 

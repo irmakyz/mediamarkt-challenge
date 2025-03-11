@@ -6,7 +6,7 @@ export const TabContainer = styled.div(({ theme }) => ({
   fontSize: theme.fontSize.xs,
   fontWeight: theme.fontWeight.bold,
   position: "relative",
-  padding: theme.padding.s,
+  padding: theme.padding.xs,
   marginBottom: theme.margin.s,
   gap: theme.spacing.xs,
   ":after": {
