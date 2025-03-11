@@ -6,7 +6,7 @@ import { FilterBarProps } from "./types";
 
 const FilterBar: React.FC<FilterBarProps> = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [status, setStatus] = useState("ALL");
+  const [status, setStatus] = useState("all");
 
   const handleStatus = (status: string) => {
     setStatus(status);
@@ -43,9 +43,9 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch }) => {
         value={status}
         onChange={(e) => handleStatus(e.target.value)}
       >
-        <option value='ALL'>All</option>
-        <option value='OPEN'>Open</option>
-        <option value='CLOSED'>Closed</option>
+        <option value='all'>All</option>
+        <option value='open'>Open</option>
+        <option value='closed'>Closed</option>
       </Button>
     </FilterContainer>
   );
