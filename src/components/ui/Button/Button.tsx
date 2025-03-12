@@ -1,18 +1,16 @@
 import React from "react";
-import { StyledButton, StyledSelect } from "./Button.styles";
+import { StyledButton } from "./Button.styles";
 import { ButtonProps } from "./types";
 
-
-const Button: React.FC<ButtonProps> = ({ onClick, children, variant = "default", disabled, value, onChange }) => {
-  if (variant === "dropdown") {
-    return (
-      <StyledSelect value={value} onChange={onChange} disabled={disabled}>
-        {children}
-      </StyledSelect>
-    );
-  }
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  children,
+  variant = "default",
+  disabled,
+  isActive,
+}) => {
   return (
-    <StyledButton onClick={onClick} disabled={disabled}>
+    <StyledButton onClick={onClick} disabled={disabled} variant={variant} isActive={isActive}>
       {children}
     </StyledButton>
   );

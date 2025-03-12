@@ -1,12 +1,31 @@
 import React, { useState } from "react";
-import { SearchIcon, XIcon } from "@primer/octicons-react";
-import { Button } from "@/components/index";
-import { FilterContainer, SearchInput } from "./FilterBar.styles";
+import { SearchIcon, XCircleFillIcon } from "@primer/octicons-react";
+import { Button, Dropdown } from "@/components/index";
+import {
+  FilterContainer,
+  SearchButton,
+  SearchContainer,
+  SearchInput,
+} from "./FilterBar.styles";
 import { FilterBarProps } from "./types";
 
-const FilterBar: React.FC<FilterBarProps> = ({ onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [status, setStatus] = useState("all");
+const STATE_OPTIONS = [
+  {
+    value: "all",
+    label: "All",
+  },
+  {
+    value: "open",
+    label: "Open",
+  },
+  {
+    value: "closed",
+    label: "Closed",
+  },
+];
+const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
+  const [searchQuery, setSearchQuery] = useState(filter?.query || "");
+  const [status, setStatus] = useState(filter?.status || "all");
 
   const handleStatus = (status: string) => {
     setStatus(status);
@@ -23,32 +42,31 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch }) => {
 
   return (
     <FilterContainer>
-      <SearchInput
-        type='text'
-        placeholder='Search for an issue'
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
+      <SearchContainer>
+        <SearchInput
+          type='text'
+          placeholder='Search for an issue'
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        {searchQuery && (
+          <Button onClick={() => setSearchQuery("")} variant='icon'>
+            <XCircleFillIcon size={16} />
+          </Button>
+        )}
+        <SearchButton onClick={handleSearch} variant='filled'>
+          <SearchIcon size={16} />
+        </SearchButton>
+      </SearchContainer>
+
+      <Dropdown
+        options={STATE_OPTIONS}
+        selectedValue={status}
+        onChange={handleStatus}
       />
-      {searchQuery && (
-        <Button onClick={() => setSearchQuery("")}>
-          <XIcon size={16} />
-        </Button>
-      )}
-      <Button onClick={handleSearch}>
-        <SearchIcon size={16} />
-      </Button>
-      <Button
-        variant='dropdown'
-        value={status}
-        onChange={(e) => handleStatus(e.target.value)}
-      >
-        <option value='all'>All</option>
-        <option value='open'>Open</option>
-        <option value='closed'>Closed</option>
-      </Button>
     </FilterContainer>
   );
 };
 
-export default FilterBar;
+export default React.memo(FilterBar);
