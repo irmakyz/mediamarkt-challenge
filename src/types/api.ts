@@ -12,4 +12,6 @@ export interface IssueItemResponse {
 }
 export interface IssueResponse {
   items: IssueItemResponse[];
+  total_count: number;
+  incomplete_results: boolean;
 }

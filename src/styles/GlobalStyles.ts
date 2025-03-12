@@ -25,6 +25,8 @@ const GlobalStyles = createGlobalStyle`
     flex-grow: 1; /* Expands to fill available space */
   }
   main {
+    display:flex;
+    flex-direction:column;
     flex: 1;
   }
 `;

@@ -11,9 +11,7 @@ export const IssueContainer = styled.div(({ theme }) => ({
   rowGap: theme.spacing.xs,
   alignItems: "center",
   justifyContent: "space-between",
-  border: `1px solid ${theme.colors.geyser}`,
   padding: theme.padding.s,
-  marginBottom: theme.margin.s,
   fontSize: theme.fontSize.xs,
   position: "relative",
 
@@ -40,6 +38,10 @@ export const IssueStatus = styled.div(() => ({
 export const IssueTitle = styled.span(({ theme }) => ({
   fontWeight: theme.fontWeight.bold,
   textDecoration: "none",
+  overflowWrap: "break-word",
+  wordBreak: "break-word",
+  whiteSpace: "normal",
+  display: "block",
   "&:hover": {
     textDecoration: "underline",
     color: theme.colors.scienceBlue,
@@ -51,6 +53,7 @@ export const IssueDetail = styled.div(({ theme }) => ({
   alignItems: "center",
   gap: theme.spacing.m,
   color: theme.colors.shuttleGrey,
+  flexWrap: "wrap", 
   gridArea: "detail",
   fontSize: theme.fontSize.xxs,
 }));

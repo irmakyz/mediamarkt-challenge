@@ -8,8 +8,8 @@ export const fetchIssues = async (
   query: string = "",
   status: string = "all",
   page: number = 1,
-  perPage: number = 10
-): Promise<{ issues: Issue[]; error: string | null }> => {
+  perPage: number = 25
+): Promise<{ issues: Issue[]; error: string | null; totalPages: number }> => {
   try {
     console.log("query");
     const repo = "facebook/react";
@@ -23,6 +23,9 @@ export const fetchIssues = async (
     console.log("apiurl", apiUrl);
     const response = await axios.get<IssueResponse>(apiUrl);
     console.log("RESPONSE", response);
+    const totalCount = response?.data.total_count;
+    const totalPages = Math.ceil(totalCount / perPage);
+
     const issues = response?.data?.items.map((issue: IssueItemResponse) => ({
       id: issue.number,
       title: issue.title,
@@ -37,10 +40,10 @@ export const fetchIssues = async (
       createdAt: issue.created_at,
     }));
 
-    return { issues, error: null };
+    return { issues, error: null, totalPages };
   } catch (error) {
     console.error("Error fetching issues:", error);
     const errorMessage = "Failed to fetch issues from GitHub API";
-    return { issues: [], error: errorMessage };
+    return { issues: [], error: errorMessage, totalPages: 0 };
   }
 };
