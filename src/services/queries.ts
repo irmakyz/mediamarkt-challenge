@@ -23,6 +23,7 @@ export const GET_ISSUES = gql`
             login
             avatarUrl
           }
+          bodyHTML
         }
       }
     }

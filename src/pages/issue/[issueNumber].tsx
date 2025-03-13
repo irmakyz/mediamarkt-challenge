@@ -1,8 +1,6 @@
-import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchIssueAndComments } from "@/services/api";
 import { Button, DetailItem } from "@/components";
-import { Comment } from "@/types/comment";
 import {
   DetailContainer,
   IssueTitle,
@@ -10,59 +8,68 @@ import {
 } from "@/styles/DetailPage.style";
 import { PageInfo } from "@/types/api";
 import { Issue } from "@/types/issue";
+import { Comment } from "@/types/comment";
+import { GetServerSideProps } from "next";
+import { useState } from "react";
 
 interface IssueDetailProps {
-  firstComments: Comment[];
-  lastComments?: Comment[];
-  initialError?: string;
+  issueNumber: number;
+  initialIssue: Issue;
+  initialComments: Comment[];
+  initialLastComments?: Comment[];
+  initialPageInfo: PageInfo;
   initialHasMorePages: boolean;
   beforeCursor: string;
-  issueNumber: number;
-  initialPageInfo: PageInfo;
-  issue: Issue;
 }
 
 const DetailPage: React.FC<IssueDetailProps> = ({
-  firstComments,
-  lastComments,
-  initialError,
+  issueNumber,
+  initialIssue,
+  initialComments,
+  initialLastComments,
+  initialPageInfo,
   initialHasMorePages,
   beforeCursor,
-  initialPageInfo,
-  issueNumber,
-  issue,
 }) => {
-  const [middleComments, setMiddleComments] = useState<Comment[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(initialError || null);
-  const [pageInfo, setPageInfo] = useState<PageInfo | null>(initialPageInfo);
-  const [hasMorePages, setHasMorePages] =
-    useState<boolean>(initialHasMorePages);
+  const [hasMorePages, setHasMorePages] = useState(initialHasMorePages);
 
-  const loadMoreComments = async () => {
-    if (issue) setLoading(true);
-    try {
-      const {
-        comments,
-        pageInfo: newPageInfo,
-        hasMorePages: newHasMorePages,
-      } = await fetchIssueAndComments(
+  const { data, fetchNextPage, isFetchingNextPage, error } = useInfiniteQuery({
+    queryKey: ["comments", issueNumber],
+    queryFn: async ({ pageParam }) => {
+      const response = await fetchIssueAndComments(
         issueNumber,
         false,
         12,
-        pageInfo?.endCursor,
+        pageParam,
         beforeCursor
       );
-      setMiddleComments((prev) => [...prev, ...comments]);
-      setPageInfo(newPageInfo);
-      setHasMorePages(newHasMorePages);
-    } catch {
-      setError("Failed to load more comments.");
-    }
-    setLoading(false);
-  };
+      setHasMorePages(response?.hasMorePages);
+      return response;
+    },
+    initialPageParam: initialPageInfo?.endCursor,
+    getNextPageParam: (currentPage) =>
+      hasMorePages ? currentPage.pageInfo?.endCursor : null,
+    getPreviousPageParam: (firstPage) =>
+      firstPage.pageInfo?.hasPreviousPage ? firstPage.beforeCursor : null,
+    initialData: {
+      pages: [
+        {
+          comments: initialComments,
+          lastComments: initialLastComments,
+          pageInfo: initialPageInfo,
+          issue: initialIssue,
+          hasMorePages: initialHasMorePages,
+          beforeCursor,
+        },
+      ],
+      pageParams: [initialPageInfo?.endCursor],
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (error) return <p style={{ color: "red" }}>{error.message}</p>;
+
+  const issue = data?.pages[0]?.issue || initialIssue;
 
   return (
     <DetailContainer>
@@ -76,21 +83,19 @@ const DetailPage: React.FC<IssueDetailProps> = ({
         createdAt={issue.createdAt}
       />
       <CommentsContainer>
-        {firstComments.map((comment) => (
-          <DetailItem key={comment.id} {...comment} />
-        ))}
+        {data?.pages.map((page) =>
+          page.comments.map((comment) => (
+            <DetailItem key={comment.id} {...comment} />
+          ))
+        )}
 
-        {middleComments.map((comment) => (
-          <DetailItem key={comment.id} {...comment} />
-        ))}
-
-        {hasMorePages && (
-          <Button onClick={loadMoreComments} disabled={loading}>
-            {loading ? "Loading..." : "Load More"}
+        {!!hasMorePages && (
+          <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+            {isFetchingNextPage ? "Loading..." : "Load More"}
           </Button>
         )}
 
-        {lastComments?.map((comment) => (
+        {initialLastComments?.map((comment) => (
           <DetailItem key={comment.id} {...comment} />
         ))}
       </CommentsContainer>
@@ -103,22 +108,21 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const {
     comments,
     lastComments,
-    error: initialError,
-    hasMorePages: initialHasMorePages,
-    beforeCursor,
     pageInfo: initialPageInfo,
     issue,
+    hasMorePages: initialHasMorePages,
+    beforeCursor,
   } = await fetchIssueAndComments(issueNumber, true, 12);
+
   return {
     props: {
-      firstComments: comments,
-      lastComments,
-      initialError,
+      issueNumber,
+      initialIssue: issue,
+      initialComments: comments,
+      initialLastComments: lastComments,
+      initialPageInfo,
       initialHasMorePages,
       beforeCursor,
-      issueNumber,
-      initialPageInfo,
-      issue,
     },
   };
 };

@@ -41,15 +41,17 @@ export const fetchIssues = async (
       },
       fetchPolicy: "network-only",
     });
-    const issues = data?.search?.nodes.map((issue: IssueItemResponse) => ({
-      issueNumber: issue.number,
-      commentsCount: issue.comments.totalCount,
-      title: issue.title,
-      state: issue.state,
-      author: issue.author?.login,
-      createdAt: issue.createdAt,
-      avatarUrl: issue.author?.avatarUrl,
-    }));
+    const issues = data?.search?.nodes
+      .filter((issue: IssueItemResponse) => issue.author && issue.bodyHTML)
+      .map((issue: IssueItemResponse) => ({
+        issueNumber: issue.number,
+        commentsCount: issue.comments.totalCount,
+        title: issue.title,
+        state: issue.state,
+        author: issue.author!.login,
+        createdAt: issue.createdAt,
+        avatarUrl: issue.author!.avatarUrl,
+      }));
     const totalCount = Math.min(data?.search?.issueCount, MAX_ISSUES);
     const totalPages = Math.ceil(totalCount / perPage);
     const reachedLimit =
@@ -73,7 +75,6 @@ export const fetchIssueAndComments = async (
   comments: Comment[];
   lastComments?: Comment[];
   issue: Issue | null;
-  error: string | null;
   hasMorePages: boolean;
   beforeCursor: string | null;
   pageInfo: PageInfo | null;
@@ -85,26 +86,27 @@ export const fetchIssueAndComments = async (
         issueNumber: issueNumber,
         first: firstLoad ? first / 2 : first,
         afterCursor,
-        beforeCursor,
+        beforeCursor: firstLoad ? undefined : beforeCursor,
       },
       fetchPolicy: "network-only",
     });
 
     const issueResponse = data.repository.issue;
-    const comments = issueResponse.comments.nodes.map(
-      (comment: CommentResponse) => ({
+    const comments = issueResponse.comments.nodes
+      .filter((comment: CommentResponse) => comment.author && comment.bodyHTML)
+      .map((comment: CommentResponse) => ({
         id: comment.id,
         bodyHTML: comment.bodyHTML,
-        author: comment.author?.login || null,
-        avatarUrl: comment.author?.avatarUrl || null,
+        author: comment.author!.login,
+        avatarUrl: comment.author!.avatarUrl,
         createdAt: comment.createdAt,
-      })
-    );
+      }));
+
     const issue = {
       title: issueResponse.title,
       state: issueResponse.state,
-      author: issueResponse.author?.login || null,
-      avatarUrl: issueResponse.author?.avatarUrl || null,
+      author: issueResponse.author!.login || null,
+      avatarUrl: issueResponse.author!.avatarUrl || null,
       createdAt: issueResponse.createdAt,
       bodyHTML: issueResponse.bodyHTML,
       issueNumber: issueNumber,
@@ -114,25 +116,26 @@ export const fetchIssueAndComments = async (
     const hasMorePages =
       issueResponse.comments.nodes.length && pageInfo.hasNextPage;
 
-    if (firstLoad && totalCount > first / 2) {
+    if (firstLoad && totalCount > first) {
       const lastResponse = await client.query({
         query: GET_ISSUE_AND_COMMENTS,
         variables: {
           issueNumber,
-          last: first / 2,
+          last: totalCount < first ? totalCount - first / 2 : first / 2,
         },
       });
 
-      const lastComments =
-        lastResponse.data.repository.issue.comments.nodes.map(
-          (comment: CommentResponse) => ({
-            id: comment.id,
-            body: comment.bodyHTML,
-            author: comment.author?.login || null,
-            avatarUrl: comment.author?.avatarUrl || null,
-            createdAt: comment.createdAt,
-          })
-        );
+      const lastComments = lastResponse.data.repository.issue.comments.nodes
+        .filter(
+          (comment: CommentResponse) => comment.author && comment.bodyHTML
+        )
+        .map((comment: CommentResponse) => ({
+          id: comment.id,
+          bodyHTML: comment.bodyHTML,
+          author: comment.author!.login,
+          avatarUrl: comment.author!.avatarUrl,
+          createdAt: comment.createdAt,
+        }));
 
       const initialBeforeCursor =
         lastResponse.data.repository.issue.comments.pageInfo.startCursor;
@@ -140,7 +143,6 @@ export const fetchIssueAndComments = async (
       return {
         comments,
         lastComments,
-        error: null,
         hasMorePages,
         beforeCursor: initialBeforeCursor,
         pageInfo,
@@ -153,20 +155,11 @@ export const fetchIssueAndComments = async (
       comments,
       lastComments: [],
       beforeCursor: null,
-      error: null,
       hasMorePages,
       issue,
     };
   } catch (error) {
     console.error("Error fetching comments:", error);
-    return {
-      comments: [],
-      lastComments: [],
-      error: "Failed to fetch comments",
-      hasMorePages: false,
-      beforeCursor: null,
-      pageInfo: null,
-      issue: null,
-    };
+    throw new Error("Failed to fetch details. Please try again.");
   }
 };
