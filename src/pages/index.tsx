@@ -1,60 +1,66 @@
 import { GetServerSideProps } from "next";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { fetchIssues } from "@/services/api";
 import { Issue } from "@/types/issue";
 import { FilterBar, IssueList, Loader, Pagination } from "@/components";
+import { PageInfo } from "@/types/api";
+import { useQuery } from "@tanstack/react-query";
 
 interface HomePageProps {
   initialIssues: Issue[];
-  initialError?: string;
+  initialError: string | null;
   initialTotalPages: number;
+  initialPageInfo: PageInfo;
+  initialReachedLimit: boolean;
 }
 
 const HomePage: React.FC<HomePageProps> = ({
   initialIssues,
-  initialError,
   initialTotalPages,
+  initialPageInfo,
+  initialReachedLimit,
 }) => {
-  const [issues, setIssues] = useState<Issue[]>(initialIssues);
   const [filter, setFilter] = useState({ query: "", status: "all" });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(initialError || null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  const pageCursorsRef = useRef<{ [page: number]: string | null }>({ 1: null });
 
-  useEffect(() => {
-    const searchIssues = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const {
-          issues: newIssues,
-          error: fetchError,
-          totalPages: newTotalPages,
-        } = await fetchIssues(filter.query, filter.status, currentPage);
-        if (fetchError) {
-          setError(fetchError);
-        } else {
-          setIssues(newIssues);
-          setTotalPages(newTotalPages);
-        }
-      } catch (error) {
-        setError("An unexpected error occurred. Please try again.");
-        console.error("Error fetching issues:", error);
+  const { data, error, isLoading, isFetching } = useQuery({
+    queryKey: ["issues", filter.query, filter.status, currentPage],
+    queryFn: async () => {
+      const afterCursor = pageCursorsRef.current[currentPage] || null;
+      const result = await fetchIssues(
+        filter.query,
+        filter.status,
+        25,
+        afterCursor
+      );
+
+      if (
+        result.pageInfo?.endCursor &&
+        !pageCursorsRef.current[currentPage + 1]
+      ) {
+        pageCursorsRef.current[currentPage + 1] = result.pageInfo.endCursor;
       }
-      setLoading(false);
-    };
-    searchIssues();
-  }, [filter, currentPage]);
+
+      return result;
+    },
+    initialData: {
+      issues: initialIssues,
+      pageInfo: initialPageInfo,
+      totalPages: initialTotalPages,
+      reachedLimit: initialReachedLimit,
+    },
+    placeholderData: (previousData) => previousData,
+  });
 
   if (error) {
     return (
       <div>
-        <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>
+        <p style={{ color: "red", fontWeight: "bold" }}>{error.message}</p>
       </div>
     );
   }
-  if (loading) {
+  if (isLoading || isFetching) {
     return <Loader />;
   }
 
@@ -67,10 +73,13 @@ const HomePage: React.FC<HomePageProps> = ({
         }}
         filter={filter}
       />
-      <IssueList issues={issues} />
+      <IssueList
+        issues={data?.issues || []}
+        reachedLimit={data?.reachedLimit}
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={totalPages}
+        totalPages={data?.totalPages}
         onPageChange={setCurrentPage}
       />
     </div>
@@ -80,10 +89,18 @@ const HomePage: React.FC<HomePageProps> = ({
 export const getServerSideProps: GetServerSideProps = async () => {
   const {
     issues: initialIssues,
-    error: initialError,
     totalPages: initialTotalPages,
-  } = await fetchIssues("", "all", 1);
-  return { props: { initialIssues, initialError, initialTotalPages } };
+    pageInfo: initialPageInfo,
+    reachedLimit: initialReachedLimit,
+  } = await fetchIssues("", "all");
+  return {
+    props: {
+      initialIssues,
+      initialTotalPages,
+      initialPageInfo,
+      initialReachedLimit,
+    },
+  };
 };
 
 export default HomePage;

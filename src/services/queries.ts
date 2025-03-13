@@ -3,64 +3,71 @@ import { gql } from "@apollo/client";
 export const GET_ISSUES = gql`
   query GetIssues($query: String!, $first: Int!, $after: String) {
     search(query: $query, type: ISSUE, first: $first, after: $after) {
+      issueCount
       pageInfo {
         endCursor
         hasNextPage
+        hasPreviousPage
+        startCursor
       }
       nodes {
         ... on Issue {
-          id
           title
-          url
+          number
+          comments {
+            totalCount
+          }
           state
+          createdAt
           author {
             login
+            avatarUrl
           }
-          createdAt
         }
       }
     }
   }
 `;
-
-export const GET_ISSUE_DETAILS = gql`
-  query GetIssueDetails(
-    $owner: String!
-    $name: String!
+export const GET_ISSUE_AND_COMMENTS = gql`
+  query GetIssueAndComments(
     $issueNumber: Int!
-    $commentsFirst: Int!
-    $commentsAfter: String
-    $commentsLast: Int!
-    $commentsBefore: String
+    $first: Int
+    $last: Int
+    $afterCursor: String
+    $beforeCursor: String
   ) {
-    repository(owner: $owner, name: $name) {
+    repository(owner: "facebook", name: "react") {
       issue(number: $issueNumber) {
+        id
+        number
         title
-        body
-        comments(first: $commentsFirst, after: $commentsAfter) {
+        bodyHTML
+        state
+        createdAt
+        author {
+          login
+          avatarUrl
+        }
+        comments(
+          first: $first
+          last: $last
+          after: $afterCursor
+          before: $beforeCursor
+        ) {
+          totalCount
           pageInfo {
+            startCursor
             endCursor
             hasNextPage
           }
           nodes {
-            body
+            id
+            bodyHTML
+            createdAt
             author {
               login
+              avatarUrl
             }
-            createdAt
-          }
-        }
-        lastComments: comments(last: $commentsLast, before: $commentsBefore) {
-          pageInfo {
-            startCursor
-            hasPreviousPage
-          }
-          nodes {
-            body
-            author {
-              login
-            }
-            createdAt
           }
         }
       }
