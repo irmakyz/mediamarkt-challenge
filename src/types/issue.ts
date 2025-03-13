@@ -1,12 +1,12 @@
 export interface Issue {
-  id: number;
+  issueNumber: number;
+  commentsCount?: number;
   title: string;
   state: string;
-  url: string;
-  labels: { name: string; color: string }[];
-  comments: number;
   author: string;
   createdAt: string;
+  bodyHTML?: string;
+  avatarUrl?: string;
 }
 
 export interface Label {

@@ -1,17 +1,31 @@
-import { Label } from "./issue";
-
 export interface IssueItemResponse {
   number: number;
   title: string;
   state: string;
-  html_url: string;
-  labels: Label[];
-  comments: number;
-  user: { login: string };
-  created_at: string;
+  comments: { totalCount: number };
+  author: { login: string; avatarUrl: string };
+  createdAt: string;
 }
+export interface PageInfo {
+  endCursor: string | null;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
+}
+
 export interface IssueResponse {
-  items: IssueItemResponse[];
-  total_count: number;
-  incomplete_results: boolean;
+  search: {
+    nodes: IssueItemResponse[];
+    pageInfo: PageInfo;
+    issueCount: number;
+  };
+}
+export interface CommentResponse {
+  id: string;
+  bodyHTML: string;
+  createdAt: string;
+  author: {
+    login: string;
+    avatarUrl: string;
+  };
 }
