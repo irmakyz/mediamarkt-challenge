@@ -6,3 +6,4 @@ export { default as Tab } from "./Tab";
 export { default as Pagination } from "./Pagination";
 export { default as Loader } from "./Loader";
 export { default as Dropdown } from "./Dropdown";
+export { default as WarningToaster } from "./WarningToaster";

@@ -15,12 +15,17 @@ export const NavHeader = styled.div(({ theme }) => ({
   color: theme.colors.scienceBlue,
   display: "flex",
   justifyContent: "start",
-  paddingInline: theme.padding.m,
+  paddingInline: "1.5rem",
   alignItems: "center",
   gap: theme.spacing.xs,
 
   [theme.media.tablet]: {
     fontSize: theme.fontSize.s,
+  },
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize.xxs,
+    flexDirection: "column",
+    alignItems: "start",
   },
 }));
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "@/components";
-import { PaginationContainer, PageNumber, Ellipsis } from "./Pagination.styles";
-import { generatePageNumbers } from "@/utils/pagination";
+import { PaginationContainer} from "./Pagination.styles";
 
 interface PaginationProps {
   currentPage: number;
@@ -14,8 +13,6 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
-  const pageNumbers = generatePageNumbers(totalPages, currentPage);
-
   return (
     <PaginationContainer>
       <Button
@@ -24,20 +21,6 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         {"<"} Previous
       </Button>
-      {pageNumbers.map((page, index) =>
-        page === "..." ? (
-          <Ellipsis key={index}>{page}</Ellipsis>
-        ) : (
-          <PageNumber
-            key={index}
-            variant='filled'
-            isActive={page === currentPage}
-            onClick={() => onPageChange(Number(page))}
-          >
-            {page}
-          </PageNumber>
-        )
-      )}
       <Button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages || totalPages === 0}

@@ -16,7 +16,7 @@ export const StyledButton = styled.button.withConfig({
 
   borderRadius: theme.borderRadius,
   cursor: "pointer",
-  fontSize: theme.fontSize.s,
+  fontSize: theme.fontSize.xxs,
   background: theme.colors.aquaHaze,
   transition: "background 0.2s ease-in-out",
 

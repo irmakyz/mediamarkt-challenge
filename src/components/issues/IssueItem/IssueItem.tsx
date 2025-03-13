@@ -17,11 +17,10 @@ import {
 import { formatDate } from "@/utils/formatDate";
 
 const IssueItem: React.FC<IssueItemProps> = ({
-  id,
+  issueNumber,
   title,
   state,
-  url,
-  comments,
+  commentsCount,
   author,
   createdAt,
 }) => {
@@ -35,18 +34,20 @@ const IssueItem: React.FC<IssueItemProps> = ({
         )}
       </IssueStatus>
       <IssueHeader>
-        <Link href={url} passHref>
+        <Link href={`/issue/${issueNumber}`} passHref>
           <IssueTitle>{title}</IssueTitle>
         </Link>
       </IssueHeader>
       <IssueDetail>
         <span>
-          #{id} opened by {author} on {formatDate(createdAt)}
+          {author
+            ? `#${issueNumber} opened by ${author} on ${formatDate(createdAt)}`
+            : `#${issueNumber} opened on ${formatDate(createdAt)}`}
         </span>
       </IssueDetail>
       <Comments>
         <CommentIcon size={16} />
-        {comments}
+        {commentsCount}
       </Comments>
     </IssueContainer>
   );
