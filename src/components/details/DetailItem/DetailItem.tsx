@@ -32,13 +32,7 @@ const DetailItem: React.FC<DetailItemProps> = ({
           <strong>{author}</strong>
           <span>on {formatDate(createdAt)}</span>
         </DetailHeader>
-        {bodyHTML ? (
-          <DetailBody dangerouslySetInnerHTML={{ __html: bodyHTML || "" }} />
-        ) : (
-          <DetailBody>
-            <span>Content might be deleted</span>
-          </DetailBody>
-        )}
+        <DetailBody dangerouslySetInnerHTML={{ __html: bodyHTML || "" }} />
       </DetailContainer>
     </DetailItemContainer>
   );

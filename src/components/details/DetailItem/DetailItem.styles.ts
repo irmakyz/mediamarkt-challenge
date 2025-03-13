@@ -61,4 +61,8 @@ export const DetailBody = styled.div(({ theme }) => ({
     fontSize: theme.fontSize.xxxs,
     padding: theme.padding.m,
   },
+  "& *": {
+    maxWidth: "100%",
+    textWrap: "wrap",
+  },
 }));

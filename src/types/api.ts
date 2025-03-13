@@ -5,6 +5,7 @@ export interface IssueItemResponse {
   comments: { totalCount: number };
   author: { login: string; avatarUrl: string };
   createdAt: string;
+  bodyHTML?: string;
 }
 export interface PageInfo {
   endCursor: string | null;
