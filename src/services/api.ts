@@ -27,7 +27,7 @@ export const fetchIssues = async (
     const stateFilter = state === "all" ? "" : `state:${state}`;
     const searchQuery =
       query !== ""
-        ? `${encodeURIComponent(query)} repo:${REPO} is:issue`
+        ? `${query} repo:${REPO} is:issue`
         : `repo:${REPO} is:issue`;
     const filterQuery =
       stateFilter !== "" ? `${searchQuery} ${stateFilter}` : searchQuery;

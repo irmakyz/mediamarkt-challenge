@@ -63,7 +63,12 @@ const HomePage: React.FC<HomePageProps> = ({
   });
 
   if (initialError || error) {
-    return <ErrorContainer message={error?.message || initialError?.message} />;
+    return (
+      <ErrorContainer
+        data-testid='error-container'
+        message={error?.message || initialError?.message}
+      />
+    );
   }
 
   return (
@@ -75,7 +80,7 @@ const HomePage: React.FC<HomePageProps> = ({
         }}
         filter={filter}
       />
-      {isFetching&& <Loader />}
+      {isFetching && <Loader />}
       {!isFetching && (
         <IssueList
           issues={data?.issues || []}

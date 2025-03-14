@@ -4,7 +4,7 @@ import { LoaderContainer } from "./Loader.styles";
 
 const Loader: React.FC = () => {
   return (
-    <LoaderContainer>
+    <LoaderContainer data-testid='loader'>
       <SyncIcon size={100} />
     </LoaderContainer>
   );

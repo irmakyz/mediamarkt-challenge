@@ -16,6 +16,7 @@ export const AvatarContainer = styled.div(({ theme }) => ({
   marginRight: theme.margin.m,
   img: {
     borderRadius: "50%",
+    border: `1px solid ${theme.colors.lightGrey}`,
   },
   [theme.media.mobile]: {
     marginRight: 0,

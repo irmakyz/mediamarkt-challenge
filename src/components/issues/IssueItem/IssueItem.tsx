@@ -25,7 +25,7 @@ const IssueItem: React.FC<IssueItemProps> = ({
   createdAt,
 }) => {
   return (
-    <IssueContainer>
+    <IssueContainer data-testid="issue-item">
       <IssueStatus>
         {state === "OPEN" ? (
           <IssueOpenedIcon

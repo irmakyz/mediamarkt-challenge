@@ -44,7 +44,7 @@ const DetailPage: React.FC<IssueDetailProps> = ({
       const response = await fetchIssueAndComments(
         issueNumber,
         false,
-        12,
+        24,
         pageParam,
         beforeCursor
       );
@@ -83,10 +83,10 @@ const DetailPage: React.FC<IssueDetailProps> = ({
   }
   return (
     <DetailContainer>
-      <IssueTitle>
+      <IssueTitle data-testid='issue-title'>
         {issue.title} #{issue.issueNumber}
       </IssueTitle>
-      <IssueState state={issue.state}>
+      <IssueState state={issue.state} data-testid='issue-state'>
         {issue.state}
       </IssueState>
       <DetailItem
@@ -106,6 +106,7 @@ const DetailPage: React.FC<IssueDetailProps> = ({
           <LoadMoreButton
             onClick={handleLoadMore}
             disabled={isFetchingNextPage}
+            data-testid='load-more-button'
           >
             {isFetchingNextPage ? "Loading..." : "Load More"}
           </LoadMoreButton>

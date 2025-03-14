@@ -24,6 +24,7 @@ const Pagination: React.FC<PaginationProps> = ({
       <Button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages || totalPages === 0}
+        data-testid="next-page-button"
       >
         Next {">"}
       </Button>

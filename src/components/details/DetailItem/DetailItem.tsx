@@ -18,13 +18,14 @@ const DetailItem: React.FC<DetailItemProps> = ({
   avatarUrl,
 }) => {
   return (
-    <DetailItemContainer>
+    <DetailItemContainer data-testid="detail-item">
       <AvatarContainer>
         <Image
           src={avatarUrl || "/avatar_placeholder.png"}
           alt={author || "github user"}
           width={50}
           height={50}
+          data-testid="detail-item-avatar"
         />
       </AvatarContainer>
       <DetailContainer>

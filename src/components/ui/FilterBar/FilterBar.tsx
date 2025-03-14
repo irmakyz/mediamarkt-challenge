@@ -49,13 +49,22 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyDown}
+          data-testid='search-input'
         />
         {searchQuery && (
-          <Button onClick={() => setSearchQuery("")} variant='icon' data-testid="clear-button">
+          <Button
+            onClick={() => setSearchQuery("")}
+            variant='icon'
+            data-testid='clear-button'
+          >
             <XCircleFillIcon size={16} />
           </Button>
         )}
-        <SearchButton onClick={handleSearch} variant='filled' data-testid="search-button">
+        <SearchButton
+          onClick={handleSearch}
+          variant='filled'
+          data-testid='search-button'
+        >
           <SearchIcon size={16} />
         </SearchButton>
       </SearchContainer>
