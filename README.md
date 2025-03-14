@@ -37,13 +37,13 @@ Open http://localhost:3000 with your browser to see the result.
 
 ## 📂 Project Structure
 
-- src/pages/index.tsx: Main page to view and filter GitHub issues.
-- src/pages/issue/[issueNumber].tsx: Page to view details of a single issue and its comments.
-- src/components/: Contains reusable UI components.
-- src/services/: Contains services for fetching data from the GitHub API.
-- src/utils/: Utility functions used across the project.
-- src/styles/: Styling files for the project.
-- src/types/: TypeScript types used in the project.
+- **src/pages/index.tsx:** Main page to view and filter GitHub issues.
+- **src/pages/issue/[issueNumber].tsx:** Page to view details of a single issue and its comments.
+- **src/components/:** Contains reusable UI components.
+- **src/services/:** Contains services for fetching data from the GitHub API.
+- **src/utils/:** Utility functions used across the project.
+- **src/styles/:** Styling files for the project.
+- **src/types/:** TypeScript types used in the project.
 
 ## Features
 
