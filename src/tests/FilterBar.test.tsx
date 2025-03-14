@@ -17,10 +17,10 @@ describe("FilterBar Component", () => {
   test("renders input field and search button", () => {
     render(<FilterBar {...defaultProps} />);
 
-    expect(
+    jestExpect(
       screen.getByPlaceholderText("Search for an issue")
     ).toBeInTheDocument();
-    expect(screen.getByTestId("search-button")).toBeInTheDocument();
+    jestExpect(screen.getByTestId("search-button")).toBeInTheDocument();
   });
 
   test("updates search query on input change", () => {
@@ -31,7 +31,7 @@ describe("FilterBar Component", () => {
     ) as HTMLInputElement;
     fireEvent.change(input, { target: { value: "bug" } });
 
-    expect(input.value).toBe("bug");
+    jestExpect(input.value).toBe("bug");
   });
 
   test("calls onSearch when search button is clicked", () => {
@@ -43,8 +43,8 @@ describe("FilterBar Component", () => {
     const searchButton = screen.getByTestId("search-button");
     fireEvent.click(searchButton);
 
-    expect(mockOnSearch).toHaveBeenCalledTimes(1);
-    expect(mockOnSearch).toHaveBeenCalledWith("bug", "all");
+    jestExpect(mockOnSearch).toHaveBeenCalledTimes(1);
+    jestExpect(mockOnSearch).toHaveBeenCalledWith("bug", "all");
   });
 
   test("calls onSearch when Enter key is pressed", () => {
@@ -55,8 +55,8 @@ describe("FilterBar Component", () => {
 
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
-    expect(mockOnSearch).toHaveBeenCalledTimes(1);
-    expect(mockOnSearch).toHaveBeenCalledWith("bug", "all");
+    jestExpect(mockOnSearch).toHaveBeenCalledTimes(1);
+    jestExpect(mockOnSearch).toHaveBeenCalledWith("bug", "all");
   });
 
   test("calls onSearch when status dropdown is changed", () => {
@@ -68,7 +68,7 @@ describe("FilterBar Component", () => {
     const openOption = screen.getByText("Open");
     fireEvent.click(openOption);
 
-    expect(mockOnSearch).toHaveBeenCalledTimes(1);
-    expect(mockOnSearch).toHaveBeenCalledWith("", "open");
+    jestExpect(mockOnSearch).toHaveBeenCalledTimes(1);
+    jestExpect(mockOnSearch).toHaveBeenCalledWith("", "open");
   });
 });

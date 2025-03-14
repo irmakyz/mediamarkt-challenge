@@ -4,6 +4,7 @@ import theme from "@/styles/theme";
 import { render } from "@testing-library/react";
 import "next-router-mock";
 import React from "react";
+import { expect } from "@jest/globals";
 
 jest.mock("next/link", () => {
   const Link = ({ href, children }) => <a href={href}>{children}</a>;
@@ -13,6 +14,8 @@ jest.mock("next/link", () => {
 
 const customRender = (ui, options) =>
   render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>, options);
+
+global.jestExpect = expect;
 
 export * from "@testing-library/react";
 export { customRender as render };

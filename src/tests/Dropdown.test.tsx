@@ -18,7 +18,7 @@ describe("Dropdown Component", () => {
       />
     );
 
-    expect(screen.getByRole("button")).toHaveTextContent("Option 1");
+    jestExpect(screen.getByRole("button")).toHaveTextContent("Option 1");
   });
 
   test("opens dropdown menu when button is clicked", () => {
@@ -33,8 +33,8 @@ describe("Dropdown Component", () => {
     const dropdownButton = screen.getByRole("button");
     fireEvent.click(dropdownButton);
 
-    expect(screen.getByText("Option 2")).toBeInTheDocument();
-    expect(screen.getByText("Option 3")).toBeInTheDocument();
+    jestExpect(screen.getByText("Option 2")).toBeInTheDocument();
+    jestExpect(screen.getByText("Option 3")).toBeInTheDocument();
   });
 
   test("calls onChange when an option is selected", () => {
@@ -53,8 +53,8 @@ describe("Dropdown Component", () => {
     const option2 = screen.getByText("Option 2");
     fireEvent.click(option2);
 
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith("option2");
+    jestExpect(mockOnChange).toHaveBeenCalledTimes(1);
+    jestExpect(mockOnChange).toHaveBeenCalledWith("option2");
   });
 
   test("closes dropdown menu after selection", () => {
@@ -72,7 +72,7 @@ describe("Dropdown Component", () => {
     const option2 = screen.getByText("Option 2");
     fireEvent.click(option2);
 
-    expect(screen.queryByText("Option 2")).not.toBeInTheDocument();
-    expect(screen.queryByText("Option 3")).not.toBeInTheDocument();
+    jestExpect(screen.queryByText("Option 2")).not.toBeInTheDocument();
+    jestExpect(screen.queryByText("Option 3")).not.toBeInTheDocument();
   });
 });

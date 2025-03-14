@@ -72,11 +72,24 @@ Run unit tests with:
 
 ```bash
 npm test
+# or
+yarn test
+# or
+pnpm test
+# or
+bun test
+
 ```
 Run Cypress end-to-end tests:
 
 ```bash
 npm run e2e
+# or
+yarn run e2e
+# or
+pnpm run e2e
+# or
+bun run e2e
 ```
 
 ## Rendering Strategy: SSR & Client-Side Rendering

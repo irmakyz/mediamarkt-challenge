@@ -13,8 +13,8 @@ describe("Pagination Component", () => {
       <Pagination currentPage={2} totalPages={5} onPageChange={onPageChange} />
     );
 
-    expect(screen.getByText("< Previous")).toBeInTheDocument();
-    expect(screen.getByText("Next >")).toBeInTheDocument();
+    jestExpect(screen.getByText("< Previous")).toBeInTheDocument();
+    jestExpect(screen.getByText("Next >")).toBeInTheDocument();
   });
 
   test("disables Previous button when on the first page", () => {
@@ -22,8 +22,8 @@ describe("Pagination Component", () => {
       <Pagination currentPage={1} totalPages={5} onPageChange={onPageChange} />
     );
 
-    expect(screen.getByText("< Previous")).toBeDisabled();
-    expect(screen.getByText("Next >")).not.toBeDisabled();
+    jestExpect(screen.getByText("< Previous")).toBeDisabled();
+    jestExpect(screen.getByText("Next >")).not.toBeDisabled();
   });
 
   test("disables Next button when on the last page", () => {
@@ -31,8 +31,8 @@ describe("Pagination Component", () => {
       <Pagination currentPage={5} totalPages={5} onPageChange={onPageChange} />
     );
 
-    expect(screen.getByText("< Previous")).not.toBeDisabled();
-    expect(screen.getByText("Next >")).toBeDisabled();
+    jestExpect(screen.getByText("< Previous")).not.toBeDisabled();
+    jestExpect(screen.getByText("Next >")).toBeDisabled();
   });
 
   test("calls onPageChange with the correct value when Previous is clicked", () => {
@@ -42,8 +42,8 @@ describe("Pagination Component", () => {
 
     fireEvent.click(screen.getByText("< Previous"));
 
-    expect(onPageChange).toHaveBeenCalledTimes(1);
-    expect(onPageChange).toHaveBeenCalledWith(2);
+    jestExpect(onPageChange).toHaveBeenCalledTimes(1);
+    jestExpect(onPageChange).toHaveBeenCalledWith(2);
   });
 
   test("calls onPageChange with the correct value when Next is clicked", () => {
@@ -53,7 +53,7 @@ describe("Pagination Component", () => {
 
     fireEvent.click(screen.getByText("Next >"));
 
-    expect(onPageChange).toHaveBeenCalledTimes(1);
-    expect(onPageChange).toHaveBeenCalledWith(4);
+    jestExpect(onPageChange).toHaveBeenCalledTimes(1);
+    jestExpect(onPageChange).toHaveBeenCalledWith(4);
   });
 });

@@ -12,8 +12,8 @@ const mockProps = {
 describe("DetailItem Component", () => {
   test("renders without crashing", () => {
     render(<DetailItem {...mockProps} />);
-    expect(screen.getByText(mockProps.author)).toBeInTheDocument();
-    expect(
+    jestExpect(screen.getByText(mockProps.author)).toBeInTheDocument();
+    jestExpect(
       screen.getByText(`on ${formatDate(mockProps.createdAt)}`)
     ).toBeInTheDocument();
   });
@@ -21,24 +21,24 @@ describe("DetailItem Component", () => {
   test("renders avatar with correct src", () => {
     render(<DetailItem {...mockProps} />);
     const avatar = screen.getByAltText(mockProps.author);
-    expect(avatar.getAttribute("src")).toContain("avatars.githubusercontent.com");
+    jestExpect(avatar.getAttribute("src")).toContain("avatars.githubusercontent.com");
 
   });
 
   test("uses default avatar when avatarUrl is missing", () => {
     render(<DetailItem {...mockProps} />);
     const avatar = screen.getByAltText(mockProps.author);
-    expect(avatar.getAttribute("src")).toContain("avatars.githubusercontent.com");
+    jestExpect(avatar.getAttribute("src")).toContain("avatars.githubusercontent.com");
 
   });
 
   test("renders HTML content inside DetailBody", () => {
     render(<DetailItem {...mockProps} />);
-    expect(screen.getByText("Test comment content")).toBeInTheDocument();
+    jestExpect(screen.getByText("Test comment content")).toBeInTheDocument();
   });
 
   test("handles missing bodyHTML safely", () => {
     render(<DetailItem {...mockProps} />);
-    expect(screen.getByTestId("detail-item-body")).toBeInTheDocument();
+    jestExpect(screen.getByTestId("detail-item-body")).toBeInTheDocument();
   });
 });

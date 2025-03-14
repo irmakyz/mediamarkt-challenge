@@ -36,24 +36,24 @@ describe("IssueList Component", () => {
   test("displays 'No issues found' when issue list is empty", () => {
     render(<IssueList issues={[]} reachedLimit={false} />);
 
-    expect(screen.getByText("No Results Found")).toBeInTheDocument();
+    jestExpect(screen.getByText("No Results Found")).toBeInTheDocument();
   });
 
   test("renders list of issues correctly", () => {
     render(<IssueList issues={mockIssues} reachedLimit={false} />);
 
     const issueItems = screen.getAllByTestId("issue-item");
-    expect(issueItems).toHaveLength(mockIssues.length);
-    expect(screen.getByText("First Issue")).toBeInTheDocument();
-    expect(screen.getByText("Second Issue")).toBeInTheDocument();
+    jestExpect(issueItems).toHaveLength(mockIssues.length);
+    jestExpect(screen.getByText("First Issue")).toBeInTheDocument();
+    jestExpect(screen.getByText("Second Issue")).toBeInTheDocument();
   });
 
   test("shows warning toaster when reachedLimit is true", () => {
     render(<IssueList issues={mockIssues} reachedLimit={true} />);
 
     const warningToaster = screen.getByTestId("warning-toaster");
-    expect(warningToaster).toBeInTheDocument();
-    expect(warningToaster).toHaveTextContent(
+    jestExpect(warningToaster).toBeInTheDocument();
+    jestExpect(warningToaster).toHaveTextContent(
       "Showing only the first 1000 issues. Refine your search to view more."
     );
   });

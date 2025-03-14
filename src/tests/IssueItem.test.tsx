@@ -18,13 +18,13 @@ describe("IssueItem Component", () => {
     render(<IssueItem {...mockIssue} />);
 
     const titleElement = screen.getByText(mockIssue.title);
-    expect(titleElement).toBeInTheDocument();
+    jestExpect(titleElement).toBeInTheDocument();
     const linkElement = screen.getByRole("link", {
       name: mockIssue.title,
     });
 
-    expect(linkElement).toBeInTheDocument();
-    expect(linkElement).toHaveAttribute(
+    jestExpect(linkElement).toBeInTheDocument();
+    jestExpect(linkElement).toHaveAttribute(
       "href",
       `/issue/${mockIssue.issueNumber}`
     );
@@ -33,7 +33,7 @@ describe("IssueItem Component", () => {
   test("renders issue state icon correctly", () => {
     render(<IssueItem {...mockIssue} />);
 
-    expect(screen.getByTestId("issue-status-open-icon")).toBeInTheDocument();
+    jestExpect(screen.getByTestId("issue-status-open-icon")).toBeInTheDocument();
   });
 
   test("renders issue details correctly", () => {
@@ -44,12 +44,12 @@ describe("IssueItem Component", () => {
         mockIssue.createdAt
       )}`
     );
-    expect(issueDetails).toBeInTheDocument();
+    jestExpect(issueDetails).toBeInTheDocument();
   });
 
   test("renders comments count", () => {
     render(<IssueItem {...mockIssue} />);
 
-    expect(screen.getByText(5)).toBeInTheDocument();
+    jestExpect(screen.getByText(5)).toBeInTheDocument();
   });
 });
