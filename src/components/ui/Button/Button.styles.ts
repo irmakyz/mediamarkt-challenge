@@ -9,7 +9,8 @@ export const StyledButton = styled.button.withConfig({
   justifyContent: "center",
   padding: theme.spacing.s,
   border: `1px solid ${theme.colors.geyser}`,
-
+  width: "fit-content",
+  maxWidth: "100%",
   ...(variant === "filled" && {
     border: "none",
   }),

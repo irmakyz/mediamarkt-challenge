@@ -14,6 +14,7 @@ export const IssueContainer = styled.div(({ theme }) => ({
   padding: theme.padding.s,
   fontSize: theme.fontSize.xs,
   position: "relative",
+  overflowWrap: "anywhere",
 
   "&:hover": {
     backgroundColor: theme.backgroundColor,
@@ -53,7 +54,7 @@ export const IssueDetail = styled.div(({ theme }) => ({
   alignItems: "center",
   gap: theme.spacing.m,
   color: theme.colors.shuttleGrey,
-  flexWrap: "wrap", 
+  flexWrap: "wrap",
   gridArea: "detail",
   fontSize: theme.fontSize.xxs,
 }));

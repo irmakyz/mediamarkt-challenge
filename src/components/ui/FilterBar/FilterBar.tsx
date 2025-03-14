@@ -51,11 +51,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
           onKeyDown={handleKeyDown}
         />
         {searchQuery && (
-          <Button onClick={() => setSearchQuery("")} variant='icon'>
+          <Button onClick={() => setSearchQuery("")} variant='icon' data-testid="clear-button">
             <XCircleFillIcon size={16} />
           </Button>
         )}
-        <SearchButton onClick={handleSearch} variant='filled'>
+        <SearchButton onClick={handleSearch} variant='filled' data-testid="search-button">
           <SearchIcon size={16} />
         </SearchButton>
       </SearchContainer>

@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
-export const Container = styled.div({
+export const HomePageContainer = styled.div({
   display: "flex",
   flexDirection: "column",
-  padding: "1.5rem",
   flex: 1,
 });

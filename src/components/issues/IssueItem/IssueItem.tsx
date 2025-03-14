@@ -28,13 +28,17 @@ const IssueItem: React.FC<IssueItemProps> = ({
     <IssueContainer>
       <IssueStatus>
         {state === "OPEN" ? (
-          <IssueOpenedIcon size={16} fill='green' />
+          <IssueOpenedIcon
+            data-testid='issue-status-open-icon'
+            size={16}
+            fill='green'
+          />
         ) : (
           <IssueClosedIcon size={16} fill='red' />
         )}
       </IssueStatus>
       <IssueHeader>
-        <Link href={`/issue/${issueNumber}`} passHref>
+        <Link href={`/issue/${issueNumber}`}>
           <IssueTitle>{title}</IssueTitle>
         </Link>
       </IssueHeader>

@@ -23,7 +23,8 @@ const GlobalStyles = createGlobalStyle`
   #__next {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Expands to fill available space */
+    flex-grow: 1;
+    min-height: 100vh;
   }
   main {
     display:flex;

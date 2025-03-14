@@ -44,6 +44,7 @@ export const DetailHeader = styled.div(({ theme }) => ({
   borderBottom: `1px solid ${theme.colors.geyser}`,
   backgroundColor: theme.backgroundColor,
   padding: theme.padding.m,
+  overflowWrap: "anywhere",
 
   [theme.media.mobile]: {
     flexDirection: "column",

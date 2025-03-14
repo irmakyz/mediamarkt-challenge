@@ -1,15 +1,17 @@
 import React from "react";
 import { IssueItem, WarningToaster } from "@/components";
-import { ListContainer } from "./IssueList.styles";
+import { ListContainer, NoIssueContainer } from "./IssueList.styles";
 import { IssueListProps } from "./types";
 
 const IssueList: React.FC<IssueListProps> = ({ issues, reachedLimit }) => {
-  if (!issues.length) {
-    return <p>No issues found.</p>;
-  }
-
   return (
     <ListContainer>
+      {!issues.length && (
+        <NoIssueContainer>
+          <strong>No Results Found</strong>
+          <p>Try adjusting your search filters.</p>
+        </NoIssueContainer>
+      )}
       {issues.map((issue) => (
         <IssueItem key={issue.issueNumber} {...issue} />
       ))}

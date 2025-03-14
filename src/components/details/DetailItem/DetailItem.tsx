@@ -32,10 +32,10 @@ const DetailItem: React.FC<DetailItemProps> = ({
           <strong>{author}</strong>
           <span>on {formatDate(createdAt)}</span>
         </DetailHeader>
-        <DetailBody dangerouslySetInnerHTML={{ __html: bodyHTML || "" }} />
+        <DetailBody data-testid="detail-item-body" dangerouslySetInnerHTML={{ __html: bodyHTML || "" }} />
       </DetailContainer>
     </DetailItemContainer>
   );
 };
 
-export default DetailItem;
+export default React.memo(DetailItem);

@@ -39,21 +39,21 @@ export const DropdownMenu = styled.div(({ theme }) => ({
   },
 }));
 
-export const DropdownItem = styled.div<{ isActive?: boolean }>(
-  ({ theme, isActive }) => ({
-    padding: "8px 12px",
-    cursor: "pointer",
-    fontSize: "14px",
+export const DropdownItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive?: boolean }>(({ theme, isActive }) => ({
+  padding: "8px 12px",
+  cursor: "pointer",
+  fontSize: "14px",
 
+  "&:hover": {
+    background: theme.colors.grey,
+  },
+  ...(isActive && {
+    color: theme.colors.white,
+    background: theme.colors.scienceBlue,
     "&:hover": {
-      background: theme.colors.grey,
-    },
-    ...(isActive && {
-      color: theme.colors.white,
       background: theme.colors.scienceBlue,
-      "&:hover": {
-        background: theme.colors.scienceBlue,
-      },
-    }),
-  })
-);
+    },
+  }),
+}));
