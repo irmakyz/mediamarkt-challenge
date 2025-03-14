@@ -1,14 +1,22 @@
+import React from "react";
 import { GetServerSideProps } from "next";
 import { useState, useRef } from "react";
 import { fetchIssues } from "@/services/api";
 import { Issue } from "@/types/issue";
-import { FilterBar, IssueList, Loader, Pagination } from "@/components";
+import {
+  ErrorContainer,
+  FilterBar,
+  IssueList,
+  Loader,
+  Pagination,
+} from "@/components";
 import { PageInfo } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
+import { HomePageContainer } from "@/styles/HomePage.style";
 
 interface HomePageProps {
   initialIssues: Issue[];
-  initialError: string | null;
+  initialError?: Error;
   initialTotalPages: number;
   initialPageInfo: PageInfo;
   initialReachedLimit: boolean;
@@ -19,12 +27,13 @@ const HomePage: React.FC<HomePageProps> = ({
   initialTotalPages,
   initialPageInfo,
   initialReachedLimit,
+  initialError,
 }) => {
   const [filter, setFilter] = useState({ query: "", status: "all" });
   const [currentPage, setCurrentPage] = useState(1);
   const pageCursorsRef = useRef<{ [page: number]: string | null }>({ 1: null });
 
-  const { data, error, isLoading, isFetching } = useQuery({
+  const { data, error, isFetching } = useQuery({
     queryKey: ["issues", filter.query, filter.status, currentPage],
     queryFn: async () => {
       const afterCursor = pageCursorsRef.current[currentPage] || null;
@@ -53,19 +62,12 @@ const HomePage: React.FC<HomePageProps> = ({
     placeholderData: (previousData) => previousData,
   });
 
-  if (error) {
-    return (
-      <div>
-        <p style={{ color: "red", fontWeight: "bold" }}>{error.message}</p>
-      </div>
-    );
-  }
-  if (isLoading || isFetching) {
-    return <Loader />;
+  if (initialError || error) {
+    return <ErrorContainer message={error?.message || initialError?.message} />;
   }
 
   return (
-    <div>
+    <HomePageContainer>
       <FilterBar
         onSearch={(query, status) => {
           setFilter({ query, status });
@@ -73,34 +75,52 @@ const HomePage: React.FC<HomePageProps> = ({
         }}
         filter={filter}
       />
-      <IssueList
-        issues={data?.issues || []}
-        reachedLimit={data?.reachedLimit}
-      />
+      {isFetching&& <Loader />}
+      {!isFetching && (
+        <IssueList
+          issues={data?.issues || []}
+          reachedLimit={data?.reachedLimit}
+        />
+      )}
       <Pagination
         currentPage={currentPage}
         totalPages={data?.totalPages}
         onPageChange={setCurrentPage}
       />
-    </div>
+    </HomePageContainer>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const {
-    issues: initialIssues,
-    totalPages: initialTotalPages,
-    pageInfo: initialPageInfo,
-    reachedLimit: initialReachedLimit,
-  } = await fetchIssues("", "all");
-  return {
-    props: {
-      initialIssues,
-      initialTotalPages,
-      initialPageInfo,
-      initialReachedLimit,
-    },
-  };
+  try {
+    const {
+      issues: initialIssues,
+      totalPages: initialTotalPages,
+      pageInfo: initialPageInfo,
+      reachedLimit: initialReachedLimit,
+    } = await fetchIssues("", "all");
+
+    return {
+      props: {
+        initialIssues,
+        initialTotalPages,
+        initialPageInfo,
+        initialReachedLimit,
+      },
+    };
+  } catch (error) {
+    console.error("GitHub API Error:", error);
+
+    return {
+      props: {
+        initialIssues: [],
+        initialTotalPages: 0,
+        initialPageInfo: null,
+        initialReachedLimit: false,
+        initialError: error,
+      },
+    };
+  }
 };
 
 export default HomePage;

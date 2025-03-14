@@ -1,10 +1,13 @@
+import React, { useCallback } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchIssueAndComments } from "@/services/api";
-import { Button, DetailItem } from "@/components";
+import { DetailItem, ErrorContainer } from "@/components";
 import {
   DetailContainer,
   IssueTitle,
   CommentsContainer,
+  LoadMoreButton,
+  IssueState,
 } from "@/styles/DetailPage.style";
 import { PageInfo } from "@/types/api";
 import { Issue } from "@/types/issue";
@@ -20,6 +23,7 @@ interface IssueDetailProps {
   initialPageInfo: PageInfo;
   initialHasMorePages: boolean;
   beforeCursor: string;
+  initialError?: Error;
 }
 
 const DetailPage: React.FC<IssueDetailProps> = ({
@@ -30,6 +34,7 @@ const DetailPage: React.FC<IssueDetailProps> = ({
   initialPageInfo,
   initialHasMorePages,
   beforeCursor,
+  initialError,
 }) => {
   const [hasMorePages, setHasMorePages] = useState(initialHasMorePages);
 
@@ -67,15 +72,23 @@ const DetailPage: React.FC<IssueDetailProps> = ({
     staleTime: 1000 * 60 * 5,
   });
 
-  if (error) return <p style={{ color: "red" }}>{error.message}</p>;
-
   const issue = data?.pages[0]?.issue || initialIssue;
 
+  const handleLoadMore = useCallback(() => {
+    fetchNextPage();
+  }, [fetchNextPage]);
+
+  if (initialError || error) {
+    return <ErrorContainer message={initialError?.message || error?.message} />;
+  }
   return (
     <DetailContainer>
       <IssueTitle>
         {issue.title} #{issue.issueNumber}
       </IssueTitle>
+      <IssueState state={issue.state}>
+        {issue.state}
+      </IssueState>
       <DetailItem
         author={issue.author}
         avatarUrl={issue.avatarUrl}
@@ -90,9 +103,12 @@ const DetailPage: React.FC<IssueDetailProps> = ({
         )}
 
         {!!hasMorePages && (
-          <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+          <LoadMoreButton
+            onClick={handleLoadMore}
+            disabled={isFetchingNextPage}
+          >
             {isFetchingNextPage ? "Loading..." : "Load More"}
-          </Button>
+          </LoadMoreButton>
         )}
 
         {initialLastComments?.map((comment) => (
@@ -105,26 +121,44 @@ const DetailPage: React.FC<IssueDetailProps> = ({
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const issueNumber = Number(query?.issueNumber);
-  const {
-    comments,
-    lastComments,
-    pageInfo: initialPageInfo,
-    issue,
-    hasMorePages: initialHasMorePages,
-    beforeCursor,
-  } = await fetchIssueAndComments(issueNumber, true, 12);
 
-  return {
-    props: {
-      issueNumber,
-      initialIssue: issue,
-      initialComments: comments,
-      initialLastComments: lastComments,
-      initialPageInfo,
-      initialHasMorePages,
+  try {
+    const {
+      comments,
+      lastComments,
+      pageInfo: initialPageInfo,
+      issue,
+      hasMorePages: initialHasMorePages,
       beforeCursor,
-    },
-  };
+    } = await fetchIssueAndComments(issueNumber, true, 12);
+
+    return {
+      props: {
+        issueNumber,
+        initialIssue: issue,
+        initialComments: comments,
+        initialLastComments: lastComments,
+        initialPageInfo,
+        initialHasMorePages,
+        beforeCursor,
+      },
+    };
+  } catch (error) {
+    console.error("GitHub API Error:", error);
+
+    return {
+      props: {
+        issueNumber,
+        initialIssue: null,
+        initialComments: [],
+        initialLastComments: [],
+        initialPageInfo: null,
+        initialHasMorePages: false,
+        beforeCursor: "",
+        initialError: error,
+      },
+    };
+  }
 };
 
 export default DetailPage;
