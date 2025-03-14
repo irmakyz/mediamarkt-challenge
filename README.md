@@ -1,8 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GitHub Issues Browser
 
-## Getting Started
+## 🚀 Project Overview
 
-First, run the development server:
+This project is a **GitHub Issues Browser** that allows users to:
+
+- View a list of GitHub issues.
+- Search and filter issues by state (open, closed, all).
+- View details of a single issue along with its comments.
+
+## 📦 Getting Started
+
+### Install Dependencies
+
+Before starting the project, install the required dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+### Run the development server:
 
 ```bash
 npm run dev
@@ -14,23 +33,74 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📂 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- src/pages/index.tsx: Main page to view and filter GitHub issues.
+- src/pages/issue/[issueNumber].tsx: Page to view details of a single issue and its comments.
+- src/components/: Contains reusable UI components.
+- src/services/: Contains services for fetching data from the GitHub API.
+- src/utils/: Utility functions used across the project.
+- src/styles/: Styling files for the project.
+- src/types/: TypeScript types used in the project.
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ View GitHub issues from a repository.
+- 🔎 Search and filter issues by state.
+- 📄 View issue details, including comments.
+- 📜 Pagination for better browsing experience.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js - React framework for production.
+- TypeScript - Strongly typed JavaScript for better development.
+- Apollo Client - GraphQL client for fetching GitHub issues.
+- React Query - Data fetching and caching.
+- Styled Components - CSS-in-JS styling.
+- Cypress - End-to-End testing.
 
-## Deploy on Vercel
+## 📝 Environment Variables
+To run this project, you need to set up a .env.local file with the following:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+GITHUB_ACCESS_TOKEN=your_personal_access_token
+```
+## ✅ Running Tests
+Run unit tests with:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm test
+```
+Run Cypress end-to-end tests:
+
+```bash
+npm run e2e
+```
+
+## Rendering Strategy: SSR & Client-Side Rendering
+
+This project leverages a **hybrid rendering approach** using **Server-Side Rendering (SSR)** for initial page loads and **Client-Side Rendering (CSR)** for interactive user actions.
+
+### **Server-Side Rendering (SSR) for Initial Loads**
+- Used for loading the **issues list** and **issue details** on first page visit.
+- Implemented using **Next.js `getServerSideProps`**.
+- Ensures **faster initial page load times**, **better SEO**, and **content availability for web crawlers**.
+
+✅ **Benefits of SSR:**
+- 🚀 **Faster first paint and page load times.**
+- 🔎 **SEO optimization** by delivering pre-rendered content to search engines.
+- 📊 **Improves performance** on slow network connections.
+
+### **Client-Side Rendering (CSR) for User Interactions**
+- Used for **searching issues, pagination, and loading more comments**.
+- Implemented using **Apollo Client + React Query** for efficient GraphQL fetching.
+- Allows a **smooth and interactive experience** without full-page reloads.
+
+✅ **Benefits of CSR:**
+- ⚡ **Faster user interactions** without waiting for a full page reload.
+- 🔄 **Dynamic updates** without the need for server requests on each interaction.
+- 🎯 **Reduces server load** by fetching only what’s needed in real-time.
+
+By combining **SSR for initial rendering** and **CSR for user interactions**, the app achieves **fast initial loads, good SEO, and a smooth user experience**. 🚀
