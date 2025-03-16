@@ -37,7 +37,7 @@ describe("Issue Detail Page", () => {
     cy.intercept("POST", "/graphql").as("graphqlRequest");
     cy.visit("/issue/23226");
 
-    cy.get("[data-testid='load-more-button']").click();
+    cy.get("[data-testid='load-more-button']").should("be.visible").click();
     cy.wait("@graphqlRequest");
     cy.get("[data-testid='load-more-button']").should("not.exist");
   });
