@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { GetServerSideProps } from "next";
 import { useState, useRef } from "react";
 import { fetchIssues } from "@/services/api";
@@ -32,6 +32,7 @@ const HomePage: React.FC<HomePageProps> = ({
   const [filter, setFilter] = useState({ query: "", status: "all" });
   const [currentPage, setCurrentPage] = useState(1);
   const pageCursorsRef = useRef<{ [page: number]: string | null }>({ 1: null });
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   const { data, error, isFetching } = useQuery({
     queryKey: ["issues", filter.query, filter.status, currentPage],
@@ -50,7 +51,6 @@ const HomePage: React.FC<HomePageProps> = ({
       ) {
         pageCursorsRef.current[currentPage + 1] = result.pageInfo.endCursor;
       }
-
       return result;
     },
     initialData: {
@@ -60,7 +60,14 @@ const HomePage: React.FC<HomePageProps> = ({
       reachedLimit: initialReachedLimit,
     },
     placeholderData: (previousData) => previousData,
+    enabled: shouldFetch,
   });
+
+  const handleSearch = useCallback((query: string, status: string) => {
+    setFilter({ query, status });
+    setCurrentPage(1);
+    setShouldFetch(true);
+  }, []);
 
   if (initialError || error) {
     return (
@@ -73,13 +80,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <HomePageContainer>
-      <FilterBar
-        onSearch={(query, status) => {
-          setFilter({ query, status });
-          setCurrentPage(1);
-        }}
-        filter={filter}
-      />
+      <FilterBar onSearch={handleSearch} filter={filter} />
       {isFetching && <Loader />}
       {!isFetching && (
         <IssueList
@@ -90,7 +91,10 @@ const HomePage: React.FC<HomePageProps> = ({
       <Pagination
         currentPage={currentPage}
         totalPages={data?.totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={(newPage) => {
+          setCurrentPage(newPage);
+          setShouldFetch(true);
+        }}
       />
     </HomePageContainer>
   );
