@@ -23,7 +23,7 @@ export const NavHeader = styled.div(({ theme }) => ({
     fontSize: theme.fontSize.s,
   },
   [theme.media.mobile]: {
-    fontSize: theme.fontSize.xxs,
+    fontSize: theme.fontSize.s,
     flexDirection: "column",
     alignItems: "start",
   },

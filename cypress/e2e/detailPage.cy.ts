@@ -28,7 +28,6 @@ describe("Issue Detail Page", () => {
         .click()
         .trigger("mouseup");
       cy.wait("@graphqlRequest");
-      // Check that more comments have been loaded
       cy.get("[data-testid='detail-item']").should("have.length.greaterThan", 24);
     });
 
