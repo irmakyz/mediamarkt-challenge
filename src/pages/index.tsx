@@ -9,6 +9,7 @@ import {
   IssueList,
   Loader,
   Pagination,
+  SEOHead,
 } from "@/components";
 import { PageInfo } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
@@ -79,24 +80,30 @@ const HomePage: React.FC<HomePageProps> = ({
   }
 
   return (
-    <HomePageContainer>
-      <FilterBar onSearch={handleSearch} filter={filter} />
-      {isFetching && <Loader />}
-      {!isFetching && (
-        <IssueList
-          issues={data?.issues || []}
-          reachedLimit={data?.reachedLimit}
-        />
-      )}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={data?.totalPages}
-        onPageChange={(newPage) => {
-          setCurrentPage(newPage);
-          setShouldFetch(true);
-        }}
+    <>
+      <SEOHead
+        title='GitHub Issues Browser - React Repository'
+        description='Browse, filter, and view issues from the React repository on GitHub.'
       />
-    </HomePageContainer>
+      <HomePageContainer>
+        <FilterBar onSearch={handleSearch} filter={filter} />
+        {isFetching && <Loader />}
+        {!isFetching && (
+          <IssueList
+            issues={data?.issues || []}
+            reachedLimit={data?.reachedLimit}
+          />
+        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={data?.totalPages}
+          onPageChange={(newPage) => {
+            setCurrentPage(newPage);
+            setShouldFetch(true);
+          }}
+        />
+      </HomePageContainer>
+    </>
   );
 };
 

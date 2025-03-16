@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchIssueAndComments } from "@/services/api";
-import { DetailItem, ErrorContainer } from "@/components";
+import { DetailItem, ErrorContainer, SEOHead } from "@/components";
 import {
   DetailContainer,
   IssueTitle,
@@ -82,50 +82,64 @@ const DetailPage: React.FC<IssueDetailProps> = ({
     return <ErrorContainer message={initialError?.message || error?.message} />;
   }
   return (
-    <DetailContainer aria-labelledby={`issue-title-${issueNumber}`}>
-      <IssueTitle data-testid='issue-title' id={`issue-title-${issueNumber}`}>
-        {issue.title} #{issue.issueNumber}
-      </IssueTitle>
-      <IssueState
-        $state={issue.state}
-        data-testid='issue-state'
-        aria-label={`Issue state: ${issue.state}`}
-      >
-        {issue.state}
-      </IssueState>
-      <DetailItem
-        author={issue.author}
-        avatarUrl={issue.avatarUrl}
-        bodyHTML={issue.bodyHTML}
-        createdAt={issue.createdAt}
+    <>
+      <SEOHead
+        title={`Issue #${issue.issueNumber} - ${issue.title}`}
+        description={`Details and comments for issue #${issue.issueNumber}: ${issue.title}`}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: `Issue #${issue.issueNumber} - ${issue.title}`,
+          author: issue.author,
+          datePublished: issue.createdAt,
+          commentCount: issue.commentsCount,
+        }}
       />
-      <CommentsContainer aria-label='Comments section'>
-        {data?.pages.map((page) =>
-          page.comments.map((comment) => (
+      <DetailContainer aria-labelledby={`issue-title-${issueNumber}`}>
+        <IssueTitle data-testid='issue-title' id={`issue-title-${issueNumber}`}>
+          {issue.title} #{issue.issueNumber}
+        </IssueTitle>
+        <IssueState
+          $state={issue.state}
+          data-testid='issue-state'
+          aria-label={`Issue state: ${issue.state}`}
+        >
+          {issue.state}
+        </IssueState>
+        <DetailItem
+          author={issue.author}
+          avatarUrl={issue.avatarUrl}
+          bodyHTML={issue.bodyHTML}
+          createdAt={issue.createdAt}
+        />
+        <CommentsContainer aria-label='Comments section'>
+          {data?.pages.map((page) =>
+            page.comments.map((comment) => (
+              <DetailItem key={comment.id} {...comment} />
+            ))
+          )}
+
+          {!!hasMorePages && (
+            <LoadMoreButton
+              onClick={handleLoadMore}
+              disabled={isFetchingNextPage}
+              data-testid='load-more-button'
+              aria-label={
+                isFetchingNextPage
+                  ? "Loading more comments"
+                  : "Load more comments"
+              }
+            >
+              {isFetchingNextPage ? "Loading..." : "Load More"}
+            </LoadMoreButton>
+          )}
+
+          {initialLastComments?.map((comment) => (
             <DetailItem key={comment.id} {...comment} />
-          ))
-        )}
-
-        {!!hasMorePages && (
-          <LoadMoreButton
-            onClick={handleLoadMore}
-            disabled={isFetchingNextPage}
-            data-testid='load-more-button'
-            aria-label={
-              isFetchingNextPage
-                ? "Loading more comments"
-                : "Load more comments"    
-            }
-          >
-            {isFetchingNextPage ? "Loading..." : "Load More"}
-          </LoadMoreButton>
-        )}
-
-        {initialLastComments?.map((comment) => (
-          <DetailItem key={comment.id} {...comment} />
-        ))}
-      </CommentsContainer>
-    </DetailContainer>
+          ))}
+        </CommentsContainer>
+      </DetailContainer>
+    </>
   );
 };
 
