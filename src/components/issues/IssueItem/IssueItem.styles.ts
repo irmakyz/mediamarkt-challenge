@@ -36,7 +36,7 @@ export const IssueStatus = styled.div(() => ({
   gridArea: "status",
 }));
 
-export const IssueTitle = styled.span(({ theme }) => ({
+export const IssueTitle = styled.span<{ id: number }>(({ theme }) => ({
   fontWeight: theme.fontWeight.bold,
   textDecoration: "none",
   overflowWrap: "break-word",

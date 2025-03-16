@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const NavBarContainer = styled.div(({ theme }) => ({
+export const NavBarContainer = styled.nav(({ theme }) => ({
   paddingTop: theme.padding.m,
   backgroundColor: theme.colors.aquaHaze,
   display: "flex",

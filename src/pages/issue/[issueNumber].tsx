@@ -82,11 +82,15 @@ const DetailPage: React.FC<IssueDetailProps> = ({
     return <ErrorContainer message={initialError?.message || error?.message} />;
   }
   return (
-    <DetailContainer>
-      <IssueTitle data-testid='issue-title'>
+    <DetailContainer aria-labelledby={`issue-title-${issueNumber}`}>
+      <IssueTitle data-testid='issue-title' id={`issue-title-${issueNumber}`}>
         {issue.title} #{issue.issueNumber}
       </IssueTitle>
-      <IssueState state={issue.state} data-testid='issue-state'>
+      <IssueState
+        $state={issue.state}
+        data-testid='issue-state'
+        aria-label={`Issue state: ${issue.state}`}
+      >
         {issue.state}
       </IssueState>
       <DetailItem
@@ -95,7 +99,7 @@ const DetailPage: React.FC<IssueDetailProps> = ({
         bodyHTML={issue.bodyHTML}
         createdAt={issue.createdAt}
       />
-      <CommentsContainer>
+      <CommentsContainer aria-label='Comments section'>
         {data?.pages.map((page) =>
           page.comments.map((comment) => (
             <DetailItem key={comment.id} {...comment} />
@@ -107,6 +111,11 @@ const DetailPage: React.FC<IssueDetailProps> = ({
             onClick={handleLoadMore}
             disabled={isFetchingNextPage}
             data-testid='load-more-button'
+            aria-label={
+              isFetchingNextPage
+                ? "Loading more comments"
+                : "Load more comments"    
+            }
           >
             {isFetchingNextPage ? "Loading..." : "Load More"}
           </LoadMoreButton>

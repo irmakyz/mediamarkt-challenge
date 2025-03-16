@@ -14,10 +14,11 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
 }) => {
   return (
-    <PaginationContainer>
+    <PaginationContainer aria-label="Pagination Navigation">
       <Button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label="Go to previous page"
       >
         {"<"} Previous
       </Button>
@@ -25,6 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages || totalPages === 0}
         data-testid="next-page-button"
+        aria-label="Go to next page"
       >
         Next {">"}
       </Button>

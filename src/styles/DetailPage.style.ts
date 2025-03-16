@@ -30,8 +30,8 @@ export const LoadMoreButton = styled(StyledButton)({
   alignSelf: "center",
 });
 
-export const IssueState = styled.span<{ state: string }>(
-  ({ theme, state }) => ({
+export const IssueState = styled.span<{ $state: string }>(
+  ({ theme, $state }) => ({
     padding: "6px 12px",
     borderRadius: 100,
     backgroundColor: "green",
@@ -40,7 +40,7 @@ export const IssueState = styled.span<{ state: string }>(
     marginBottom: theme.margin.s,
     maxWidth: "100%",
     color: theme.colors.white,
-    ...(state === "CLOSED" && {
+    ...($state === "CLOSED" && {
       backgroundColor: "red",
     }),
   })

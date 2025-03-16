@@ -20,16 +20,18 @@ describe("DetailItem Component", () => {
 
   test("renders avatar with correct src", () => {
     render(<DetailItem {...mockProps} />);
-    const avatar = screen.getByAltText(mockProps.author);
-    jestExpect(avatar.getAttribute("src")).toContain("avatars.githubusercontent.com");
-
+    const avatar = screen.getByTestId("detail-item-avatar");
+    jestExpect(avatar.getAttribute("src")).toContain(
+      "avatars.githubusercontent.com"
+    );
   });
 
   test("uses default avatar when avatarUrl is missing", () => {
     render(<DetailItem {...mockProps} />);
-    const avatar = screen.getByAltText(mockProps.author);
-    jestExpect(avatar.getAttribute("src")).toContain("avatars.githubusercontent.com");
-
+    const avatar = screen.getByTestId("detail-item-avatar");
+    jestExpect(avatar.getAttribute("src")).toContain(
+      "avatars.githubusercontent.com"
+    );
   });
 
   test("renders HTML content inside DetailBody", () => {

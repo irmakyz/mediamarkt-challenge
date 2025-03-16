@@ -11,13 +11,13 @@ const NavigationBar: React.FC = () => {
   return (
     <NavBarContainer>
       <NavHeader>
-        <RepoIcon size={16} />
+        <RepoIcon size={16} aria-hidden="true"/>
         <span>facebook / </span>
         <strong>react</strong>
       </NavHeader>
-      <NavActionContainer>
+      <NavActionContainer aria-label='Issue Navigation'>
         <Tab href='/'>
-          <IssueOpenedIcon size={16} />
+          <IssueOpenedIcon size={16} aria-hidden='true' />
           <span>Issues</span>
         </Tab>
       </NavActionContainer>

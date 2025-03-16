@@ -22,7 +22,7 @@ const DetailItem: React.FC<DetailItemProps> = ({
       <AvatarContainer>
         <Image
           src={avatarUrl || "/avatar_placeholder.png"}
-          alt={author || "github user"}
+          alt={`Avatar of ${author || "GitHub user"}`}
           width={50}
           height={50}
           data-testid="detail-item-avatar"

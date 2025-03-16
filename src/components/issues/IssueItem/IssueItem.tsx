@@ -25,21 +25,25 @@ const IssueItem: React.FC<IssueItemProps> = ({
   createdAt,
 }) => {
   return (
-    <IssueContainer data-testid="issue-item">
+    <IssueContainer
+      data-testid='issue-item'
+      aria-labelledby={`issue-${issueNumber}-title`}
+    >
       <IssueStatus>
         {state === "OPEN" ? (
           <IssueOpenedIcon
             data-testid='issue-status-open-icon'
             size={16}
             fill='green'
+            aria-label='Open issue'
           />
         ) : (
-          <IssueClosedIcon size={16} fill='red' />
+          <IssueClosedIcon size={16} fill='red' aria-label='Closed issue' />
         )}
       </IssueStatus>
       <IssueHeader>
         <Link href={`/issue/${issueNumber}`}>
-          <IssueTitle>{title}</IssueTitle>
+          <IssueTitle id={issueNumber}>{title}</IssueTitle>
         </Link>
       </IssueHeader>
       <IssueDetail>
@@ -50,7 +54,10 @@ const IssueItem: React.FC<IssueItemProps> = ({
         </span>
       </IssueDetail>
       <Comments>
-        <CommentIcon size={16} />
+        <CommentIcon
+          size={16}
+          aria-label={`Number of comments`}
+        />
         {commentsCount}
       </Comments>
     </IssueContainer>

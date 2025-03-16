@@ -5,7 +5,7 @@ import { IssueListProps } from "./types";
 
 const IssueList: React.FC<IssueListProps> = ({ issues, reachedLimit }) => {
   return (
-    <ListContainer>
+    <ListContainer aria-label='List of issues'>
       {!issues.length && (
         <NoIssueContainer>
           <strong>No Results Found</strong>
@@ -13,7 +13,10 @@ const IssueList: React.FC<IssueListProps> = ({ issues, reachedLimit }) => {
         </NoIssueContainer>
       )}
       {issues.map((issue) => (
-        <IssueItem key={issue.issueNumber} {...issue} />
+        <IssueItem
+          key={issue.issueNumber}
+          {...issue}
+        />
       ))}
       {reachedLimit && (
         <WarningToaster>

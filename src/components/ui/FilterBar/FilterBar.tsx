@@ -23,6 +23,7 @@ const STATE_OPTIONS = [
     label: "Closed",
   },
 ];
+
 const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
   const [searchQuery, setSearchQuery] = useState(filter?.query || "");
   const [status, setStatus] = useState(filter?.status || "all");
@@ -31,9 +32,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
     setStatus(status);
     onSearch(searchQuery, status);
   };
+
   const handleSearch = () => {
     onSearch(searchQuery, status);
   };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSearch();
@@ -50,12 +53,14 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           data-testid='search-input'
+          aria-label='Search for an issue'
         />
         {searchQuery && (
           <Button
             onClick={() => setSearchQuery("")}
             variant='icon'
             data-testid='clear-button'
+            aria-label='Clear search input'
           >
             <XCircleFillIcon size={16} />
           </Button>
@@ -64,6 +69,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
           onClick={handleSearch}
           variant='filled'
           data-testid='search-button'
+          aria-label='Search'
         >
           <SearchIcon size={16} />
         </SearchButton>
@@ -73,6 +79,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, filter }) => {
         options={STATE_OPTIONS}
         selectedValue={status}
         onChange={handleStatus}
+        aria-label='Filter by issue status'
       />
     </FilterContainer>
   );
